@@ -1,0 +1,24 @@
+- name: Setup HorizontalPodAutoscaler
+  become: true
+  gather_facts: false
+  hosts: control_plane
+  tasks:
+    - name: Copy over hpa.yml
+      ansible.builtin.copy:
+        src: hpa.yml
+        dest: ~/hpa.yml
+
+    - name: Copy over metrics-server.yml
+      ansible.builtin.copy:
+        src: metrics-server.yml
+        dest: ~/metrics-server.yml
+
+    - name: Apply metrics-server
+      ansible.builtin.command: kubectl apply -f ~/metrics-server.yml
+
+    - name: Sleep for 50 seconds and continue with play
+      ansible.builtin.wait_for:
+        timeout: 50
+
+    - name: Apply hpa
+      ansible.builtin.command: kubectl apply -f ~/hpa.yml

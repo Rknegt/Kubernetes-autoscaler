@@ -1,0 +1,12 @@
+---
+- name: Update all hosts
+  hosts: kubernetes
+  gather_facts: false
+  become: true
+  tasks:
+    - name: Update and upgrade
+      ansible.builtin.apt:
+        upgrade: true
+        update_cache: true
+    - name: Reboot
+      ansible.builtin.reboot:

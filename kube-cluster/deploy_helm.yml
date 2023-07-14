@@ -1,0 +1,25 @@
+---
+- name: Deploy helm
+  become: false
+  gather_facts: false
+  hosts: localhost
+  tasks:
+    - name: Package new version
+      ansible.builtin.shell: helm package ../application
+
+- name: Deploy helm
+  become: true
+  gather_facts: false
+  hosts: control_plane
+  tasks:
+    - name: Uninstall previous
+      ansible.builtin.shell: helm uninstall onlineboutique
+      ignore_errors: true
+
+    - name: Copy over
+      ansible.builtin.copy:
+        src: onlineboutique-0.8.0.tgz
+        dest: ~/onlineboutique-0.8.0.tgz
+
+    - name: Install new version
+      ansible.builtin.shell: helm install onlineboutique ~/onlineboutique-0.8.0.tgz

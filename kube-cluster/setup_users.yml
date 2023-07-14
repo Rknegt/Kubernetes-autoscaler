@@ -1,0 +1,27 @@
+# Source: https://nvtienanh.info/en/devops-en/install-kubernetes-cluster-on-ubuntu-22-04-20230223
+---
+- name: Ubuntu user setup
+  hosts: kubernetes
+  gather_facts: false
+  become: true
+  tasks:
+    - name: Create the 'ubuntu' user
+      ansible.builtin.user:
+        name: ubuntu
+        append: true
+        state: present
+        createhome: true
+        shell: /bin/bash
+
+    - name: Allow 'ubuntu' to have passwordless sudo
+      ansible.builtin.lineinfile:
+        dest: /etc/sudoers
+        line: 'ubuntu ALL=(ALL) NOPASSWD: ALL'
+        validate: 'visudo -cf %s'
+
+    - name: Set up authorized keys for the ubuntu user
+      ansible.posix.authorized_key:
+        user: ubuntu
+        key: "{{ item }}"
+      with_file:
+        - ~/.ssh/id_rsa.pub
