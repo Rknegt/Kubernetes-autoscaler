@@ -1,4 +1,4 @@
-# Kubernetes Edge-Cloud system with Horizontal Pod Autoscaler (HPA) setup with Ansible
+# Kubernetes Edge-Cloud system including Horizontal Pod Autoscaler (HPA) setup using Ansible
 
 ## Installation
 First of all, the hosts file needs to be changed for your specific setup.
